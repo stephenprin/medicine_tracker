@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   appName: {
     fontSize: 20,
-    color: "orange",
+    color: "#f2b949",
     fontWeight: "bold",
     letterSpacing: 1,
     marginTop: 0,
