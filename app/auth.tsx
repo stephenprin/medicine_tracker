@@ -4,22 +4,67 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
 import * as LocalAuthentication from "expo-local-authentication";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const { width, height } = Dimensions.get("window");
 
 const AuthScreen = () => {
-  const { hasBiometric, setHasBiometric } = useState(true);
-  const { isAuthenticating, setIsAuthenticating } = useState(false);
-  const { error, setError } = useState("");
+  const [hasBiometric, setHasBiometric] = useState<boolean>(false);
+  const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    checkBiometrics();
+  }, []);
+
+  const checkBiometrics = async () => {
+    const hasHardware = await LocalAuthentication.hasHardwareAsync();
+    const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+    setHasBiometric(hasHardware && isEnrolled);
+  };
+
+  const authenticate = async () => {
+    try {
+      setIsAuthenticating(true);
+      setError(null);
+      const hasHardware = await LocalAuthentication.hasHardwareAsync();
+      const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+      const supportedTypes =
+        LocalAuthentication.supportedAuthenticationTypesAsync;
+      if (supportedTypes.length == 0) {
+        Alert.alert("No biometric authentication supported");
+      }
+
+      const auth = await LocalAuthentication.authenticateAsync({
+        promptMessage:
+          hasHardware && isEnrolled
+            ? "Use face ID/TouchID"
+            : "Enter your PIN to access medittation",
+        fallbackLabel: "Use Pin",
+        cancelLabel: "Cancel",
+        disableDeviceFallback: false,
+      });
+
+      if (auth.success) {
+        router.replace("/home");
+      } else {
+        setError("Authentication failed, please try again!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <LinearGradient
-      colors={["#44449c", "#1f1f85", "#181880"]}
+      colors={["#0a0a58", "#3a3aa5", "#202092"]}
       style={styles.container}
     >
       <View style={styles.content}>
@@ -33,12 +78,13 @@ const AuthScreen = () => {
           <Text style={styles.welcomeText}>Welcome Back!</Text>
           <Text style={styles.instructionText}>
             {hasBiometric
-              ? "Use face ID/TouchID Or PIN to access your medications"
+              ? "Use face ID/TouchID to access your medications"
               : "Enter your PIN to access your medications"}
           </Text>
           <TouchableOpacity
             style={[styles.button, isAuthenticating && styles.buttonDisabled]}
             disabled={isAuthenticating}
+            onPress={authenticate}
           >
             <Ionicons
               name={hasBiometric ? "finger-print-outline" : "key-outline"}
@@ -104,7 +150,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: width - 40,
-    padding: 20,
+    padding: 30,
     borderRadius: 20,
     backgroundColor: "white",
     alignItems: "center",
@@ -130,7 +176,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   button: {
-    backgroundColor: "#f2b949",
+    backgroundColor: "#111184",
     borderRadius: 12,
     paddingVertical: 15,
     paddingHorizontal: 30,
