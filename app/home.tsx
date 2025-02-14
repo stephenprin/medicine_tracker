@@ -11,8 +11,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 
 import CircularProgress from "@/components/CircularProgress";
+import { QUICK_ACTIONS } from "@/constants/QuickAction";
+import { Link } from "expo-router";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
+
 const HomeScreen = () => {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -35,11 +38,40 @@ const HomeScreen = () => {
             <View style={styles.card}></View>
           </View>
 
+          <View style={styles.content}>
+            <View style={styles.quickActionsContainer}>
+              <Text style={styles.quickSectionTitle}>How can we help you?</Text>
+              <View style={styles.quickActionsGrid}>
+                {QUICK_ACTIONS.map((action) => (
+                  <Link href={action.route} key={action.label} asChild>
+                    <TouchableOpacity style={styles.actionButton}>
+                      <LinearGradient
+                        colors={action.gradient}
+                        style={styles.actionGradient}
+                      >
+                        <View style={styles.actionContent}>
+                          <View style={styles.actionIcon}>
+                            <Ionicons
+                              name={action.icon}
+                              size={30}
+                              color="white"
+                            />
+                          </View>
+                          <Text style={styles.actionLabel}>{action.label}</Text>
+                        </View>
+                      </LinearGradient>
+                    </TouchableOpacity>
+                  </Link>
+                ))}
+              </View>
+            </View>
+          </View>
+
           <View style={styles.progressSub}>
             <View>
               <Text className="text-lg font-bold text-center">
                 <Text
-                  style={{ color: "#182e6f", fontWeight: "bold", fontSize: 24 }}
+                  style={{ color: "#182e6f", fontWeight: "bold", fontSize: 25 }}
                 >
                   Your daily
                 </Text>{" "}
@@ -47,9 +79,8 @@ const HomeScreen = () => {
                 <Text
                   style={{
                     color: "#182e6f",
-                    fontWeight: "medium",
+                    fontWeight: 300,
                     fontSize: 20,
-                 
                   }}
                 >
                   Progress
@@ -73,7 +104,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f8f9a",
   },
   header: {
-    paddingTop: 60,
+    paddingTop: 50,
     marginBottom: 25,
     flexDirection: "row",
     alignItems: "center",
@@ -153,9 +184,55 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   progressSub: {
-    marginTop: 30,
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
+  },
+  content: {
+    flex: 1,
+    paddingTop: 30,
+  },
+  quickActionsContainer: {
+    paddingHorizontal: 20,
+    marginBottom: 40,
+  },
+  quickActionsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+    marginTop: 15,
+  },
+  actionButton: {
+    width: (width - 52) / 2,
+    height: 115,
+    borderRadius: 16,
+    overflow: "hidden",
+  },
+  actionGradient: {
+    flex: 1,
+    padding: 15,
+  },
+  actionContent: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  actionIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  actionLabel: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "white",
+    marginTop: 8,
+  },
+  quickSectionTitle: {
+    marginBottom: 10,
+    fontSize: 18,
+    fontWeight: "700",
   },
 });

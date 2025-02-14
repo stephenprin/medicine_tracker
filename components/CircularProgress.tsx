@@ -8,7 +8,7 @@ interface CircularProgressProps {
   completeDose: number;
 }
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 export default function CircularProgress({
@@ -17,10 +17,10 @@ export default function CircularProgress({
   completeDose,
 }: CircularProgressProps) {
   const animatedValue = useRef(new Animated.Value(0)).current;
-  const size = width * 0.55;
-  const strokeWidth = 15;
+  const size = width * 0.35;
+  const strokeWidth = 10;
   const radius = (size - strokeWidth) / 2;
-  const conference = 2 * Math.PI * radius;
+  const circumference = 2 * Math.PI * radius;
 
   useEffect(() => {
     Animated.timing(animatedValue, {
@@ -30,9 +30,9 @@ export default function CircularProgress({
     }).start();
   }, [progress]);
 
-  const strokeDahOffset = animatedValue.interpolate({
+  const strokeDashOffset = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [conference, 0],
+    outputRange: [circumference, 0],
   });
 
   return (
@@ -59,8 +59,8 @@ export default function CircularProgress({
           stroke="#f3625a"
           strokeWidth={strokeWidth}
           fill="none"
-          strokeDasharray={conference}
-          strokeDashoffset={strokeDahOffset}
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashOffset}
           strokeLinecap="round"
           transform={`rotate(-90 ${size / 2} ${size / 2})`}
         />
@@ -73,22 +73,23 @@ const styles = StyleSheet.create({
   progressContainer: {
     alignItems: "center",
     justifyContent: "center",
-    marginVertical: 10,
+    marginVertical: 8,
   },
-
   progressTextContainer: {
     position: "absolute",
     zIndex: 1,
     alignItems: "center",
     justifyContent: "center",
+
   },
   progressPercentage: {
-    fontSize: 34,
+    fontSize: 24,
     fontWeight: "bold",
     color: "#FA766E",
+    paddingBottom: 5
   },
   progressLabel: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: "bold",
     color: "rgba(32, 25, 25, 0.5)",
   },
