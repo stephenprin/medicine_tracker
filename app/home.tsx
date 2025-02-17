@@ -12,8 +12,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 
 import CircularProgress from "@/components/CircularProgress";
-import { QUICK_ACTIONS } from "@/constants/QuickAction";
+
 import { Link } from "expo-router";
+import { QUICK_ACTIONS } from "@/constants/QuickAction";
 
 const { width } = Dimensions.get("window");
 
@@ -162,7 +163,7 @@ const HomeScreen = () => {
         </View>
       </LinearGradient>
 
-      <Modal  visible={true} transparent={true} animationType="slide">
+      <Modal  visible={false} transparent={true} animationType="slide">
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Notification</Text>
