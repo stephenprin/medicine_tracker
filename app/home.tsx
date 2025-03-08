@@ -12,8 +12,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 
 import CircularProgress from "@/components/CircularProgress";
-import { QUICK_ACTIONS } from "@/constants/QuickAction";
+
 import { Link } from "expo-router";
+import { QUICK_ACTIONS } from "@/constants/quickAction";
 
 const { width } = Dimensions.get("window");
 
@@ -162,28 +163,27 @@ const HomeScreen = () => {
         </View>
       </LinearGradient>
 
-      <Modal  visible={true} transparent={true} animationType="slide">
+      <Modal visible={false} transparent={true} animationType="slide">
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Notification</Text>
             <TouchableOpacity style={styles.closeButton}>
-              <Ionicons name="close" size={24} color="#ccc"/>
+              <Ionicons name="close" size={24} color="#ccc" />
             </TouchableOpacity>
           </View>
           {[].map((medication) => (
-            <View style={styles.notificationItem} >
+            <View style={styles.notificationItem}>
               <View style={styles.notificationIcon}>
                 <Ionicons name="medical" size={24} />
               </View>
               <View style={styles.notificationContent}>
-              <Text style={styles.notificationTitle}>medicationname</Text>
-              <Text style={styles.notificationMessage}>medicationdosage</Text>
-              <Text style={styles.notificationTime}> medicationtime</Text>
-            </View>
+                <Text style={styles.notificationTitle}>medicationname</Text>
+                <Text style={styles.notificationMessage}>medicationdosage</Text>
+                <Text style={styles.notificationTime}> medicationtime</Text>
+              </View>
             </View>
           ))}
-
-              </View>
+        </View>
       </Modal>
     </ScrollView>
   );
